@@ -60,6 +60,7 @@ jobs:
           vagrant winrm --command "echo 'hello world!'"
           vagrant winrm --command "whoami"
           vagrant winrm --command "pwd"
+          vagrant winrm --command "echo 'cache busting'"
 
       - name: Run vagrant halt
         if: steps.vagrant-cache.outputs.cache-hit != 'true'
