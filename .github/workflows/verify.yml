@@ -39,11 +39,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache Vagrant boxes
+      # - name: Restore cached vagrant boxes
+      #   id: vagrant-cache
+      #   uses: actions/cache@v3
+      #   timeout-minutes: 5
+      #   continue-on-error: true
+      #   with:
+      #     path: ~/.vagrant.d/boxes
+      #     key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+
+
+      - name: Restore cached vagrant machines
         id: vagrant-cache
         uses: actions/cache@v3
+        # timeout-minutes: 5
+        continue-on-error: true
         with:
-          path: ~/.vagrant.d/boxes
+          path: /Users/runner/VirtualBox VMs
           key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
           restore-keys: |
             ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
@@ -54,6 +68,8 @@ jobs:
 
       - name: Run vagrant up
         run: |
+
+          env
           vboxmanage list systemproperties
 
       # - name: Run vagrant up
