@@ -57,30 +57,29 @@ jobs:
         # timeout-minutes: 5
         continue-on-error: true
         with:
-          path: /Users/runner/VirtualBox VMs
+          path: '/Users/runner/VirtualBox VMs'
           key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
           restore-keys: |
             ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
 
-      - name: Vagrant version
-        run: |
-          ls -la
-
-      - name: Run vagrant up
-        run: |
-
-          env
-          vboxmanage list systemproperties
+      # - name: Vagrant version
+      #   run: |
+      #     ls -la
 
       # - name: Run vagrant up
-        # run: vagrant up
-
-      # - name: Run vagrant command
       #   run: |
-      #     vagrant winrm --command "echo 'hello world!'"
-      #     vagrant winrm --command "whoami"
-      #     vagrant winrm --command "pwd"
-      #     vagrant winrm --command "echo 'cache busting'"
+      #     env
+      #     vboxmanage list systemproperties
+
+      - name: Run vagrant up
+        run: vagrant up
+
+      - name: Run vagrant command
+        run: |
+          vagrant winrm --command "echo 'hello world!'"
+          vagrant winrm --command "whoami"
+          vagrant winrm --command "pwd"
+          vagrant winrm --command "echo 'cache busting'"
 
       - name: Run vagrant halt
         if: steps.vagrant-cache.outputs.cache-hit != 'true'
