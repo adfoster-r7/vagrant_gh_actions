@@ -1,0 +1,67 @@
+name: Verify
+
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+permissions:
+  actions: none
+  checks: none
+  contents: none
+  deployments: none
+  id-token: none
+  issues: none
+  discussions: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+      - metakitty
+      - weekly-dependency-updates
+  pull_request:
+    branches-ignore:
+      - weekly-dependency-updates
+
+jobs:
+  build:
+    # Only macos supports vagrant nested virtualization
+    # there's also no stable release of VirtualBox for Big Sur (v11), well go with MacOS version 10.15
+    runs-on: macos-10.15
+    # runs-on: ubuntu-latest
+
+    timeout-minutes: 40
+    name: vagrant test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache Vagrant boxes
+        id: vagrant-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+
+      - name: Vagrant version
+        run: |
+          ls -la
+
+      - name: Run vagrant up
+        run: vagrant up
+
+      - name: Run vagrant command
+        run: |
+          vagrant winrm --command "echo 'hello world!'"
+          vagrant winrm --command "whoami"
+          vagrant winrm --command "dir"
+
+      - name: Run vagrant halt
+        if: steps.vagrant-cache.outputs.cache-hit != 'true'
+        # Halt the vagrant VM if the vagrant cache was a miss; So that we can restore cache it at the end of the run
+        run: vagrant halt
