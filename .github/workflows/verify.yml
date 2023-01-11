@@ -59,7 +59,7 @@ jobs:
         run: |
           vagrant winrm --command "echo 'hello world!'"
           vagrant winrm --command "whoami"
-          vagrant winrm --command "dir"
+          vagrant winrm --command "pwd"
 
       - name: Run vagrant halt
         if: steps.vagrant-cache.outputs.cache-hit != 'true'
