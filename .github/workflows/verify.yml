@@ -30,7 +30,8 @@ jobs:
   build:
     # Only macos supports vagrant nested virtualization
     # there's also no stable release of VirtualBox for Big Sur (v11), well go with MacOS version 10.15
-    runs-on: macos-10.15
+    # runs-on: macos-10.15
+    runs-on: macos-12
     # runs-on: ubuntu-latest
 
     timeout-minutes: 40
@@ -58,7 +59,6 @@ jobs:
         continue-on-error: true
         with:
           path: |
-
             ~/VirtualBox VMs
             ./.vagrant
           key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
@@ -72,15 +72,27 @@ jobs:
 
       - name: Run vagrant resume
         if: steps.vagrant-cache.outputs.cache-hit == 'true'
-        run: vagrant resume
+        run: |
+          vagrant resume
 
       - name: Run vagrant command
         run: |
-          ls -la '/Users/runner/VirtualBox VMs'
+
+
+
+          set -x
+
+          vboxmanage list vms
+
+          vagrant status
+
+
+          find '/Users/runner/VirtualBox VMs'
+          find .
           vagrant winrm --command "echo 'hello world!'"
           vagrant winrm --command "whoami"
           vagrant winrm --command "pwd"
-          vagrant winrm --command "echo 'cache busting again and again and again'"
+          vagrant winrm --command "echo 'cache busting again'"
 
       - name: Run vagrant halt
         if: steps.vagrant-cache.outputs.cache-hit != 'true'
