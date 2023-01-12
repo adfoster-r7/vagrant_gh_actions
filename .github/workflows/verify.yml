@@ -77,18 +77,33 @@ jobs:
 
       - name: Run vagrant command
         run: |
-
-
-
           set -x
 
           vboxmanage list vms
 
           vagrant status
 
+          find '/Users/runner/VirtualBox VMs'
+          find .
+
+          echo 'before registervm'
+          vagrant global-status
+          vboxmanage list vms
+
+          # register previous vagrant boxes
+          find ~/VirtualBox\ VMs -name '*.vbox' -print0 | while IFS= read -r -d '' file; do
+            echo "registering box $file"
+            vboxmanage registervm "$file"
+          done
+
+          echo 'after registervm'
+          vagrant global-status
+          vboxmanage list vms
+
 
           find '/Users/runner/VirtualBox VMs'
           find .
+
           vagrant winrm --command "echo 'hello world!'"
           vagrant winrm --command "whoami"
           vagrant winrm --command "pwd"
