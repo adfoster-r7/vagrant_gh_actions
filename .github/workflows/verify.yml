@@ -72,10 +72,11 @@ jobs:
 
       - name: Run vagrant command
         run: |
+          ls -la '/Users/runner/VirtualBox VMs'
           vagrant winrm --command "echo 'hello world!'"
           vagrant winrm --command "whoami"
           vagrant winrm --command "pwd"
-          vagrant winrm --command "echo 'cache busting again'"
+          vagrant winrm --command "echo 'cache busting again and again'"
 
       - name: Run vagrant halt
         if: steps.vagrant-cache.outputs.cache-hit != 'true'
