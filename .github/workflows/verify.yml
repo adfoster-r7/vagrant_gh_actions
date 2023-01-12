@@ -57,7 +57,9 @@ jobs:
         # timeout-minutes: 5
         continue-on-error: true
         with:
-          path: '/Users/runner/VirtualBox VMs'
+          path: |
+            /Users/runner/VirtualBox VMs
+            ./.vagrant
           key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
           restore-keys: |
             ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
