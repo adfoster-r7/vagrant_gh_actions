@@ -58,11 +58,13 @@ jobs:
         continue-on-error: true
         with:
           path: |
-            /Users/runner/VirtualBox VMs
+
+            ~/VirtualBox VMs
             ./.vagrant
           key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
           restore-keys: |
             ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+# #         ~/.vagrant.d
 
       - name: Run vagrant up
         if: steps.vagrant-cache.outputs.cache-hit != 'true'
